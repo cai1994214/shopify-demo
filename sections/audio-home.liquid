@@ -1,0 +1,168 @@
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign featured_collection = section.settings.featured_collection
+  if featured_collection == blank
+    assign featured_collection = collections.all
+  endif
+-%}
+
+<div class="audio-shell">
+  <section class="audio-hero">
+    <div class="audio-container">
+      <div class="audio-hero__content">
+        <p class="audio-eyebrow">{{ section.settings.eyebrow }}</p>
+        <h1 class="audio-title">{{ section.settings.heading }}</h1>
+        <p class="audio-subtitle">{{ section.settings.subheading }}</p>
+        <div class="audio-hero__actions">
+          <a class="audio-button audio-button--primary" href="{{ section.settings.primary_link }}">立即选购 →</a>
+          <button class="audio-button" type="button" data-audio-scroll="#audio-products-{{ section.id }}">了解更多</button>
+        </div>
+      </div>
+      <div class="audio-handwrite">好的声音<br>让生活更美好</div>
+    </div>
+  </section>
+
+  <section class="audio-section">
+    <div class="audio-container">
+      <div class="audio-section__head">
+        <div>
+          <h2 class="audio-title" style="font-size: 28px;">探索我们的产品系列</h2>
+          <p class="audio-subtitle">为不同的生活场景，找到属于你的声音。</p>
+        </div>
+        <a class="audio-link" href="{{ routes.collections_url }}">查看全部产品 →</a>
+      </div>
+      <div class="audio-category-grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'category' -%}
+            {%- assign category_collection = block.settings.collection -%}
+            <a class="audio-category-card" href="{{ category_collection.url | default: routes.collections_url }}" {{ block.shopify_attributes }}>
+              <div>
+                <h3>{{ block.settings.title }}</h3>
+                <p>{{ block.settings.text }}</p>
+                <span class="audio-category-card__arrow">→</span>
+              </div>
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: block.settings.title }}
+              {%- elsif category_collection.featured_image -%}
+                {{ category_collection.featured_image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: category_collection.title }}
+              {%- elsif featured_collection.products[forloop.index0].featured_media -%}
+                {{ featured_collection.products[forloop.index0].featured_media | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: block.settings.title }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-section" id="audio-products-{{ section.id }}">
+    <div class="audio-container">
+      <div class="audio-section__head">
+        <div>
+          <h2 class="audio-title" style="font-size: 28px;">人气产品推荐</h2>
+          <p class="audio-subtitle">用声音，点亮你的每一天。</p>
+        </div>
+        <a class="audio-link" href="{{ featured_collection.url }}">查看全部产品 →</a>
+      </div>
+      <div class="audio-product-grid">
+        {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
+          {%- liquid
+            assign labels = '新品,热销,轻巧便携,运动首选' | split: ','
+            assign label_index = forloop.index0 | modulo: 4
+          -%}
+          {% render 'audio-product-card', card_product: product, label: labels[label_index], section_id: section.id %}
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <article class="audio-product-card">
+              <div class="audio-product-card__media">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+              <div class="audio-product-card__body">
+                <a class="audio-product-card__title" href="#">AirBeat Pro</a>
+                <p>纯净音质，静享世界</p>
+                <div class="audio-product-card__price"><strong>¥ 699</strong></div>
+                <div class="audio-rating"><span>★★★★★</span><small>4.8 (320)</small></div>
+                <button class="audio-button audio-button--dark audio-button--full" type="button"><span>加入购物车</span></button>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="audio-feature-strip">
+        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'sound' %}</span><div><h3>主动降噪</h3><p>沉浸式聆听体验</p></div></div>
+        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'battery' %}</span><div><h3>40小时续航</h3><p>长久陪伴，不惧出行</p></div></div>
+        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'phone' %}</span><div><h3>高清通话</h3><p>清晰沟通，声临其境</p></div></div>
+        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'truck' %}</span><div><h3>极速配送</h3><p>全国包邮，快速送达</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-lifestyle">
+    <div class="audio-container">
+      <div class="audio-lifestyle__content">
+        <p class="audio-eyebrow">Music For A Brighter Day</p>
+        <h2 class="audio-title" style="font-size: 34px;">让好声音，成为生活的背景音</h2>
+        <p class="audio-subtitle">无论是专注、运动，还是放松时刻，声迹音频始终与你相伴。</p>
+        <a class="audio-button audio-button--dark" href="{{ section.settings.story_link }}">探索更多可能 →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-section audio-reviews">
+    <div class="audio-container">
+      <div class="audio-section__head">
+        <div>
+          <h2 class="audio-title" style="font-size: 26px;">来自用户的真实声音</h2>
+          <p class="audio-subtitle">数以万计的用户选择声迹音频。</p>
+        </div>
+      </div>
+      <div class="audio-review-grid">
+        <article class="audio-review"><div class="audio-review__head"><span class="audio-avatar">林</span><div><h3>林小雨</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“音质非常出色，降噪效果超乎预期！戴上它，整个世界都安静了。”</p></article>
+        <article class="audio-review"><div class="audio-review__head"><span class="audio-avatar">陈</span><div><h3>陈先生</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“佩戴舒适，续航很给力，出差旅行必备。声迹音频确实值得信赖！”</p></article>
+        <article class="audio-review"><div class="audio-review__head"><span class="audio-avatar">王</span><div><h3>小王同学</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“运动时戴着非常稳固，音质也很棒，已经推荐给身边的朋友了！”</p></article>
+      </div>
+      {% render 'audio-newsletter' %}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "声迹首页",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "小标题", "default": "Sound A Better You" },
+    { "type": "text", "id": "heading", "label": "主标题", "default": "沉浸式聆听新体验" },
+    { "type": "textarea", "id": "subheading", "label": "描述", "default": "纯净音质、主动降噪、长效续航，让好声音陪伴你每一个重要时刻。" },
+    { "type": "url", "id": "primary_link", "label": "主按钮链接" },
+    { "type": "url", "id": "story_link", "label": "故事按钮链接" },
+    { "type": "collection", "id": "featured_collection", "label": "推荐商品系列" },
+    { "type": "range", "id": "products_to_show", "min": 4, "max": 12, "step": 1, "default": 4, "label": "推荐商品数量" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "产品系列卡片",
+      "settings": [
+        { "type": "text", "id": "title", "label": "标题", "default": "真无线耳机" },
+        { "type": "text", "id": "text", "label": "描述", "default": "自由聆听，无线可能" },
+        { "type": "collection", "id": "collection", "label": "链接系列" },
+        { "type": "image_picker", "id": "image", "label": "图片" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "声迹首页",
+      "blocks": [
+        { "type": "category", "settings": { "title": "真无线耳机", "text": "自由聆听，无线可能" } },
+        { "type": "category", "settings": { "title": "降噪耳机", "text": "隔绝噪音，专注于你" } },
+        { "type": "category", "settings": { "title": "运动耳机", "text": "为热爱而声" } },
+        { "type": "category", "settings": { "title": "便携音箱", "text": "随时随地，畅享好声" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

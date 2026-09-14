@@ -1,0 +1,124 @@
+<div class="audio-shell">
+  <section class="audio-about-hero">
+    <div class="audio-container">
+      <div class="audio-about-hero__content">
+        <p class="audio-eyebrow">Sound A Better You</p>
+        <h1 class="audio-title">{{ page.title | default: '关于声迹音频' }}</h1>
+        <p class="audio-subtitle">我们相信，声音不只是听见，更是一种陪伴。声迹音频致力于用创新的音频科技，连接人与世界，让每一个平凡的日常都有更动人的声音。</p>
+        <a class="audio-button audio-button--primary" href="#audio-contact-{{ section.id }}">探索我们的故事 →</a>
+      </div>
+      <div class="audio-handwrite">好声音<br>让生活更美好</div>
+    </div>
+  </section>
+
+  <section class="audio-section">
+    <div class="audio-container">
+      <div class="audio-section__head">
+        <div>
+          <h2 class="audio-title" style="font-size: 30px;">品牌故事</h2>
+          <p class="audio-subtitle">用声音，连接更美好的世界。</p>
+        </div>
+        <p class="audio-subtitle" style="max-width: 640px;">声迹音频成立于 2020 年，是一个专注于高品质消费音频产品的独立品牌。我们从真实用户的日常需求出发，将前沿声学技术、简约设计美学与舒适佩戴体验结合，为全球用户带来沉浸、纯净、温暖的听觉体验。</p>
+      </div>
+
+      <div class="audio-story-grid">
+        <article class="audio-story-card"><img src="{{ 'audio-hero.png' | asset_url }}" width="132" height="132" loading="lazy" alt="音频单元"><div><h3>纯净的声音</h3><p>我们不断探索声学技术，追求更真实、细腻、富有情感的声音表现。</p></div></article>
+        <article class="audio-story-card"><img src="{{ 'audio-story.png' | asset_url }}" width="132" height="132" loading="lazy" alt="耳机设计"><div><h3>用心的设计</h3><p>简约而不简单的设计语言，让科技融入生活，成为日常中的美好。</p></div></article>
+        <article class="audio-story-card"><img src="{{ 'audio-story.png' | asset_url }}" width="132" height="132" loading="lazy" alt="舒适体验"><div><h3>舒适的体验</h3><p>从材质到结构，每个细节都服务于长时间佩戴的舒适感。</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-stats">
+    <div class="audio-container">
+      <div class="audio-stats__grid">
+        <div class="audio-stat">{% render 'audio-icon', icon: 'users' %}<div><strong>10万+</strong><p>全球用户的选择</p></div></div>
+        <div class="audio-stat">{% render 'audio-icon', icon: 'shield' %}<div><strong>98%</strong><p>用户好评率</p></div></div>
+        <div class="audio-stat">{% render 'audio-icon', icon: 'truck' %}<div><strong>30+</strong><p>覆盖国家与地区</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-section">
+    <div class="audio-container">
+      <h2 class="audio-title" style="font-size: 30px;">我们的承诺</h2>
+      <p class="audio-subtitle">从产品到服务，声迹音频始终与你同行。</p>
+      <div class="audio-commit-grid" style="margin-top:18px;">
+        <article class="audio-commit-card"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'diamond' %}</span><h3>品质保证</h3><p>严选优质材料，经过多重测试，只为更好的声音体验。</p></article>
+        <article class="audio-commit-card"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'phone' %}</span><h3>售后支持</h3><p>7x24 小时专业客服，为您提供贴心售后服务。</p></article>
+        <article class="audio-commit-card"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'truck' %}</span><h3>极速配送</h3><p>全国多仓发货，快速送达，让好声音不需等待。</p></article>
+        <article class="audio-commit-card"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'shield' %}</span><h3>安心支付</h3><p>支持多种安全支付方式，保障您的每一笔交易。</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-section" id="audio-contact-{{ section.id }}">
+    <div class="audio-container audio-contact-layout">
+      <div>
+        <h2 class="audio-title" style="font-size: 30px;">联系我们</h2>
+        <p class="audio-subtitle">无论是产品咨询、售后问题，还是合作意向，我们都期待与您交流。</p>
+        <div class="audio-contact-grid" style="margin-top:18px;">
+          <article class="audio-contact-card"><span class="audio-contact-card__icon">{% render 'audio-icon', icon: 'mail' %}</span><h3>官方邮箱</h3><p>support@shengjiaudio.com<br>我们会在 24 小时内回复</p></article>
+          <article class="audio-contact-card"><span class="audio-contact-card__icon">{% render 'audio-icon', icon: 'phone' %}</span><h3>联系电话</h3><p>400-123-4567<br>周一至周日 9:00 - 21:00</p></article>
+          <article class="audio-contact-card"><span class="audio-contact-card__icon">{% render 'audio-icon', icon: 'battery' %}</span><h3>工作时间</h3><p>周一至周日<br>9:00 - 21:00</p></article>
+          <article class="audio-contact-card"><span class="audio-contact-card__icon">{% render 'audio-icon', icon: 'shield' %}</span><h3>公司地址</h3><p>广东省深圳市南山区<br>科技园声区大厦 18 楼</p></article>
+        </div>
+      </div>
+
+      <div class="audio-form-card">
+        <h2 style="margin:0 0 6px;">给我们留言</h2>
+        <p class="audio-subtitle">填写下方表单，我们会尽快与您联系。</p>
+        {%- form 'contact', id: 'AudioContactForm', class: 'contact' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="form-status form-status-list form__message" tabindex="-1" autofocus>留言已发送，感谢您的联系。</p>
+          {%- endif -%}
+          <div class="contact__fields">
+            <div class="field">
+              <input class="field__input" type="text" id="AudioContactName" name="contact[姓名]" placeholder="请输入您的姓名">
+              <label class="field__label" for="AudioContactName">您的姓名</label>
+            </div>
+            <div class="field">
+              <input class="field__input" type="email" id="AudioContactEmail" name="contact[email]" placeholder="请输入您的邮箱" required>
+              <label class="field__label" for="AudioContactEmail">电子邮箱 *</label>
+            </div>
+          </div>
+          <div class="field">
+            <select class="field__input" id="AudioContactSubject" name="contact[主题]">
+              <option>产品咨询</option>
+              <option>售后支持</option>
+              <option>商务合作</option>
+            </select>
+            <label class="field__label" for="AudioContactSubject">主题 *</label>
+          </div>
+          <div class="field">
+            <textarea class="text-area field__input" rows="7" id="AudioContactBody" name="contact[留言内容]" placeholder="请详细描述您的问题或建议..."></textarea>
+            <label class="field__label" for="AudioContactBody">留言内容 *</label>
+          </div>
+          <button class="audio-button audio-button--primary audio-button--full" type="submit">发送留言 →</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-section audio-faq">
+    <div class="audio-container">
+      <h2 class="audio-title" style="font-size: 28px;">常见问题</h2>
+      <p class="audio-subtitle">这里有一些用户最关心的问题。</p>
+      <details><summary>产品是否支持 7 天无理由退换？</summary><p>支持。商品保持完好且符合退换条件时，可申请 7 天无理由退换。</p></details>
+      <details><summary>下单后多久可以发货？</summary><p>现货商品通常 24 小时内发出，具体时效以物流信息为准。</p></details>
+      <details><summary>产品有保修服务吗？</summary><p>声迹音频产品提供 2 年官方质保服务。</p></details>
+      <details><summary>如何联系客服？</summary><p>你可以通过本页表单、邮箱或电话联系我们。</p></details>
+    </div>
+  </section>
+
+  <div class="audio-container">
+    {% render 'audio-newsletter' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "声迹关于我们",
+  "settings": []
+}
+{% endschema %}

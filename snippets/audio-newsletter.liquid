@@ -1,0 +1,17 @@
+<div class="audio-newsletter">
+  <span class="audio-feature__icon">{% render 'audio-icon', icon: 'mail' %}</span>
+  <div>
+    <h2 style="margin:0;font-size:20px;">订阅我们的电子邮件</h2>
+    <p class="audio-subtitle">获取新品资讯、专属优惠和更多精彩内容。</p>
+  </div>
+  {%- form 'customer', id: 'AudioNewsletter', class: 'newsletter-form' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <div class="newsletter-form__field-wrapper">
+      <div class="field">
+        <input id="AudioNewsletterEmail" class="field__input" type="email" name="contact[email]" placeholder="请输入您的电子邮箱" required>
+        <label class="field__label" for="AudioNewsletterEmail">请输入您的电子邮箱</label>
+        <button type="submit" class="newsletter-form__button field__button" name="commit">立即订阅</button>
+      </div>
+    </div>
+  {%- endform -%}
+</div>

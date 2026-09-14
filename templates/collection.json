@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "audio-collection": {
+      "type": "audio-collection",
+      "settings": {
+        "products_per_page": 12
+      }
+    }
+  },
+  "order": ["audio-collection"]
+}

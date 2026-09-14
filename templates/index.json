@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "audio-home": {
+      "type": "audio-home",
+      "settings": {
+        "eyebrow": "Sound A Better You",
+        "heading": "沉浸式聆听新体验",
+        "subheading": "纯净音质、主动降噪、长效续航，让好声音陪伴你每一个重要时刻。",
+        "primary_link": "shopify://collections/all",
+        "story_link": "shopify://pages/about-us",
+        "featured_collection": "all",
+        "products_to_show": 4
+      },
+      "blocks": {
+        "category-1": { "type": "category", "settings": { "title": "真无线耳机", "text": "自由聆听，无线可能", "collection": "all" } },
+        "category-2": { "type": "category", "settings": { "title": "降噪耳机", "text": "隔绝噪音，专注于你", "collection": "all" } },
+        "category-3": { "type": "category", "settings": { "title": "运动耳机", "text": "为热爱而声", "collection": "all" } },
+        "category-4": { "type": "category", "settings": { "title": "便携音箱", "text": "随时随地，畅享好声", "collection": "all" } }
+      },
+      "block_order": ["category-1", "category-2", "category-3", "category-4"]
+    }
+  },
+  "order": ["audio-home"]
+}

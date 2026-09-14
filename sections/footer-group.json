@@ -1,0 +1,11 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "audio-footer": {
+      "type": "audio-footer",
+      "settings": {}
+    }
+  },
+  "order": ["audio-footer"]
+}

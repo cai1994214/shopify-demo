@@ -1,0 +1,209 @@
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign product_form_id = 'audio-product-form-' | append: section.id
+  assign current_variant = product.selected_or_first_available_variant
+  assign rating_value = product.metafields.reviews.rating.value.rating | default: 4.9
+  assign rating_count = product.metafields.reviews.rating_count | default: 418
+-%}
+
+<section class="audio-shell audio-product-page">
+  <div class="audio-container">
+    <div class="audio-breadcrumb">
+      <a href="{{ routes.root_url }}">首页</a>
+      <span>›</span>
+      <a href="{{ product.collections.first.url | default: routes.collections_url }}">{{ product.collections.first.title | default: '产品' }}</a>
+      <span>›</span>
+      <span>{{ product.title | escape }}</span>
+    </div>
+
+    <div class="audio-product-main">
+      <audio-gallery class="audio-gallery">
+        <div class="audio-gallery__thumbs">
+          {%- for media in product.media limit: 6 -%}
+            {%- if media.media_type == 'image' -%}
+              <button class="audio-gallery__thumb {% if forloop.first %}is-active{% endif %}" type="button" data-audio-thumb data-audio-image="{{ media | image_url: width: 1200 }}" data-audio-alt="{{ media.alt | escape }}">
+                {{ media | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 120, 160', alt: media.alt }}
+              </button>
+            {%- endif -%}
+          {%- else -%}
+            <button class="audio-gallery__thumb is-active" type="button">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</button>
+          {%- endfor -%}
+        </div>
+        <div class="audio-gallery__main">
+          {%- if product.featured_media -%}
+            {{ product.featured_media | image_url: width: 1200 | image_tag: data-audio-main-image: '', sizes: '(min-width: 990px) 560px, 100vw', widths: '480, 720, 960, 1200', alt: product.title }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </audio-gallery>
+
+      <div class="audio-product-info">
+        <div class="audio-product-info__award">🏆 旗舰产品<br><small>2024年度推荐</small></div>
+        <span class="audio-badge" style="position: static;">热销</span>
+        <h1 class="audio-title">{{ product.title | escape }}</h1>
+        <p class="audio-subtitle">
+          {%- if product.description != blank -%}
+            {{ product.description | strip_html | truncate: 150 }}
+          {%- else -%}
+            沉浸于纯净之声，聆听更大的世界。为通勤、办公和旅途打造稳定、舒适、细腻的聆听体验。
+          {%- endif -%}
+        </p>
+        <div class="audio-rating"><span>★★★★★</span><small>{{ rating_value }}（{{ rating_count }} 条评价）</small></div>
+        <div class="audio-price-row">
+          <strong data-audio-product-price>{{ current_variant.price | money_without_trailing_zeros }}</strong>
+          {%- if current_variant.compare_at_price > current_variant.price -%}
+            <s>{{ current_variant.compare_at_price | money_without_trailing_zeros }}</s>
+            <span class="audio-sale-tag">立省 {{ current_variant.compare_at_price | minus: current_variant.price | money_without_trailing_zeros }}</span>
+          {%- endif -%}
+        </div>
+
+        <audio-tabs>
+          {%- unless product.has_only_default_variant -%}
+            <p style="margin:0 0 8px;font-weight:800;">版本选择：</p>
+            <div class="audio-option-grid">
+              {%- for variant in product.variants limit: 6 -%}
+                <button
+                  class="audio-option {% if variant.id == current_variant.id %}is-active{% endif %}"
+                  type="button"
+                  data-audio-variant
+                  data-variant-id="{{ variant.id }}"
+                  data-variant-price="{{ variant.price | money_without_trailing_zeros }}"
+                  {% unless variant.available %}disabled{% endunless %}
+                >
+                  <strong>{{ variant.title }}</strong><br>
+                  <span>{{ variant.price | money_without_trailing_zeros }}</span>
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+        </audio-tabs>
+
+        <product-form class="product-form" data-section-id="{{ section.id }}">
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <span class="product-form__error-message"></span>
+          </div>
+          {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}" class="product-variant-id" data-audio-selected-variant>
+            <p style="margin:0 0 8px;font-weight:800;">数量：</p>
+            <audio-quantity class="audio-qty">
+              <button type="button" data-audio-qty="minus" aria-label="减少数量">−</button>
+              <input type="number" name="quantity" value="1" min="1" aria-label="数量">
+              <button type="button" data-audio-qty="plus" aria-label="增加数量">+</button>
+            </audio-quantity>
+            <div class="audio-buy-row">
+              <button type="submit" name="add" class="audio-button audio-button--full">
+                <span>加入购物车</span>
+                {%- render 'loading-spinner' -%}
+              </button>
+              <button type="button" class="audio-button audio-button--primary audio-button--full" data-audio-buy-now>
+                <span>立即购买</span>
+                {%- render 'loading-spinner' -%}
+              </button>
+            </div>
+            {{ form | payment_button }}
+          {%- endform -%}
+        </product-form>
+
+        <div class="audio-trust-row">
+          <span>✓ 7天无理由退换</span>
+          <span>✓ 官方正品保证</span>
+          <span>✓ 免费快速配送</span>
+          <span>✓ 2年官方质保</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="audio-feature-strip">
+      <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'sound' %}</span><div><h3>主动降噪</h3><p>隔绝噪音，专注聆听</p></div></div>
+      <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'battery' %}</span><div><h3>40小时续航</h3><p>长久陪伴，不惧出行</p></div></div>
+      <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'sound' %}</span><div><h3>蓝牙 5.3</h3><p>更稳定，更低延迟</p></div></div>
+      <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'phone' %}</span><div><h3>高清通话</h3><p>AI降噪麦克风</p></div></div>
+    </div>
+
+    <section class="audio-section">
+      <div class="audio-section__head">
+        <div>
+          <h2 class="audio-title" style="font-size: 28px;">产品亮点</h2>
+          <p class="audio-subtitle">每一个细节，都为更好的聆听体验。</p>
+        </div>
+        <a class="audio-link" href="#audio-specs-{{ section.id }}">探索更多功能 →</a>
+      </div>
+      <div class="audio-story-grid">
+        <article class="audio-story-card">
+          {%- if product.media[1] -%}{{ product.media[1] | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: product.title }}{%- else -%}{{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}{%- endif -%}
+          <div><span class="audio-story-card__icon">{% render 'audio-icon', icon: 'sound' %}</span><h3>震撼音质表现</h3><p>40mm 大尺寸动圈单元，带来丰富细节与澎湃低频。</p></div>
+        </article>
+        <article class="audio-story-card">
+          {%- if product.media[2] -%}{{ product.media[2] | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: product.title }}{%- else -%}{{ 'product-3' | placeholder_svg_tag: 'placeholder-svg' }}{%- endif -%}
+          <div><span class="audio-story-card__icon">{% render 'audio-icon', icon: 'shield' %}</span><h3>全天舒适佩戴</h3><p>轻量化结构与柔软材质，长时间聆听也自在。</p></div>
+        </article>
+        <article class="audio-story-card">
+          {%- if product.featured_media -%}{{ product.featured_media | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: product.title }}{%- else -%}{{ 'product-4' | placeholder_svg_tag: 'placeholder-svg' }}{%- endif -%}
+          <div><span class="audio-story-card__icon">{% render 'audio-icon', icon: 'sound' %}</span><h3>智能主动降噪</h3><p>识别环境噪音，随时随地享受纯净空间。</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="audio-section audio-spec-review" id="audio-specs-{{ section.id }}">
+      <div>
+        <h2 class="audio-title" style="font-size: 28px;">产品规格</h2>
+        <table class="audio-spec-table">
+          <tr><th>产品型号</th><td>{{ product.title | escape }}</td></tr>
+          <tr><th>发声单元</th><td>40mm 动圈单元</td></tr>
+          <tr><th>频率响应</th><td>20Hz - 40kHz</td></tr>
+          <tr><th>降噪技术</th><td>混合主动降噪 ANC</td></tr>
+          <tr><th>蓝牙版本</th><td>Bluetooth 5.3</td></tr>
+          <tr><th>续航时间</th><td>最长 40 小时</td></tr>
+          <tr><th>质保服务</th><td>2年官方质保</td></tr>
+        </table>
+      </div>
+      <div>
+        <h2 class="audio-title" style="font-size: 28px;">用户评价</h2>
+        <div class="audio-score">
+          <div><div class="audio-score__number">{{ rating_value }}<small> / 5</small></div><div class="audio-rating"><span>★★★★★</span></div><p class="audio-subtitle">来自 {{ rating_count }} 条真实评价</p></div>
+          <div>
+            <div class="audio-score__bar"><span>5星</span><span style="--value:86%;"></span><span>86%</span></div>
+            <div class="audio-score__bar"><span>4星</span><span style="--value:11%;"></span><span>11%</span></div>
+            <div class="audio-score__bar"><span>3星</span><span style="--value:3%;"></span><span>3%</span></div>
+            <div class="audio-score__bar"><span>2星</span><span style="--value:0%;"></span><span>0%</span></div>
+            <div class="audio-score__bar"><span>1星</span><span style="--value:0%;"></span><span>0%</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="audio-section">
+      <div class="audio-section__head">
+        <h2 class="audio-title" style="font-size: 28px;">你可能还喜欢</h2>
+        <a class="audio-link" href="{{ routes.collections_url }}">查看全部产品 →</a>
+      </div>
+      <div class="audio-product-grid">
+        {%- for related in collections.all.products limit: 4 -%}
+          {%- unless related.id == product.id -%}
+            {% render 'audio-product-card', card_product: related, label: '推荐', section_id: section.id %}
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </section>
+  </div>
+
+  <section class="audio-lifestyle">
+    <div class="audio-container">
+      <div class="audio-lifestyle__content">
+        <p class="audio-eyebrow">Music For A Brighter Day</p>
+        <h2 class="audio-title" style="font-size: 30px;">让好声音，成为生活的背景音</h2>
+      </div>
+    </div>
+  </section>
+</section>
+
+{% schema %}
+{
+  "name": "声迹商品详情",
+  "settings": []
+}
+{% endschema %}

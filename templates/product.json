@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "audio-product": {
+      "type": "audio-product",
+      "settings": {}
+    }
+  },
+  "order": ["audio-product"]
+}

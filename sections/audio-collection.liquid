@@ -1,0 +1,113 @@
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+<div class="audio-shell">
+  <section class="audio-collection-hero">
+    <div class="audio-container">
+      <div class="audio-collection-hero__content">
+        <div class="audio-breadcrumb">
+          <a href="{{ routes.root_url }}">首页</a>
+          <span>›</span>
+          <span>{{ collection.title | escape }}</span>
+        </div>
+        <h1 class="audio-title">{{ collection.title | default: '无线耳机' }}</h1>
+        <p class="audio-subtitle">
+          {%- if collection.description != blank -%}
+            {{ collection.description | strip_html }}
+          {%- else -%}
+            摆脱束缚，聆听更自由。从通勤、运动到日常娱乐，为每一种生活场景提供纯净而动人的声音。
+          {%- endif -%}
+        </p>
+      </div>
+      <div class="audio-handwrite">好的声音<br>让生活更美好</div>
+    </div>
+  </section>
+
+  <div class="audio-container">
+    {%- paginate collection.products by section.settings.products_per_page -%}
+      <div class="audio-collection-layout">
+        <aside class="audio-filter" id="main-collection-filters" data-id="{{ section.id }}">
+          {% render 'facets',
+            results: collection,
+            enable_filtering: true,
+            enable_sorting: false,
+            filter_type: 'vertical',
+            paginate: paginate
+          %}
+        </aside>
+
+        <div>
+          <div class="audio-toolbar">
+            <div><strong>共 {{ collection.products_count }} 件商品</strong></div>
+            <div class="audio-toolbar__actions">
+              <facet-filters-form>
+                <form id="FacetSortForm">
+                  <select name="sort_by" class="audio-select facet-filters__sort" id="SortBy" aria-describedby="a11y-refresh-page-message">
+                    {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                    {%- for option in collection.sort_options -%}
+                      <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name | escape }}</option>
+                    {%- endfor -%}
+                  </select>
+                </form>
+              </facet-filters-form>
+              <button class="audio-icon-button is-active" type="button" aria-label="网格视图">▦</button>
+              <button class="audio-icon-button" type="button" aria-label="紧凑视图">▤</button>
+            </div>
+          </div>
+
+          <div id="ProductGridContainer">
+            {%- if collection.products.size == 0 -%}
+              <div class="collection collection--empty" id="product-grid" data-id="{{ section.id }}">
+                <h2 class="audio-title" style="font-size: 28px;">没有找到符合条件的商品</h2>
+                <p class="audio-subtitle">请减少筛选条件后再试。</p>
+              </div>
+            {%- else -%}
+              <div class="audio-product-grid" id="product-grid" data-id="{{ section.id }}">
+                {%- for product in collection.products -%}
+                  {%- liquid
+                    assign labels = '新品,热销,降噪,运动,新品,长续航' | split: ','
+                    assign label_index = forloop.index0 | modulo: 6
+                  -%}
+                  {% render 'audio-product-card', card_product: product, label: labels[label_index], section_id: section.id %}
+                  {%- if forloop.index == 6 -%}
+                    <div class="audio-promo">
+                      <div class="audio-promo__content">
+                        <p class="audio-eyebrow">新品首发 · 限时优惠</p>
+                        <h2 class="audio-title" style="font-size: 34px;">全场满 999 减 100</h2>
+                        <p class="audio-subtitle">让好声音，陪伴你每一个重要时刻。</p>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+              {%- if paginate.pages > 1 -%}
+                {% render 'pagination', paginate: paginate, anchor: '' %}
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          {% render 'audio-newsletter' %}
+        </div>
+      </div>
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "声迹集合页",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "default": 12,
+      "label": "每页商品数量"
+    }
+  ]
+}
+{% endschema %}

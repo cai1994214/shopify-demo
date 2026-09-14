@@ -1,0 +1,56 @@
+{%- liquid
+  assign current_product = card_product
+  assign card_label = label | default: '新品'
+  assign rating_value = current_product.metafields.reviews.rating.value.rating | default: 4.8
+  assign rating_count = current_product.metafields.reviews.rating_count | default: 320
+  assign tagline = current_product.metafields.custom.short_tagline | default: current_product.vendor | default: '纯净音质，静享世界'
+  assign form_id = 'audio-card-form-' | append: section_id | append: '-' | append: current_product.id
+-%}
+
+<article class="audio-product-card" data-audio-card>
+  <a class="audio-product-card__media" href="{{ current_product.url }}">
+    <span class="audio-badge">{{ card_label }}</span>
+    {%- if current_product.featured_media -%}
+      {{
+        current_product.featured_media
+        | image_url: width: 720
+        | image_tag:
+          loading: 'lazy',
+          sizes: '(min-width: 990px) 280px, 50vw',
+          widths: '240, 360, 540, 720',
+          alt: current_product.title
+      }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </a>
+  <div class="audio-product-card__body">
+    <a class="audio-product-card__title" href="{{ current_product.url }}">{{ current_product.title | escape }}</a>
+    <p>{{ tagline }}</p>
+    <div class="audio-product-card__price">
+      <strong>{{ current_product.price | money_without_trailing_zeros }}</strong>
+      {%- if current_product.compare_at_price > current_product.price -%}
+        <s>{{ current_product.compare_at_price | money_without_trailing_zeros }}</s>
+      {%- endif -%}
+    </div>
+    <div class="audio-rating" aria-label="{{ rating_value }} 分">
+      <span aria-hidden="true">★★★★★</span>
+      <small>{{ rating_value }} ({{ rating_count }})</small>
+    </div>
+    {%- if current_product.selected_or_first_available_variant -%}
+      <product-form class="product-form audio-product-card__form" data-section-id="{{ section_id }}">
+        <div class="product-form__error-message-wrapper" role="alert" hidden>
+          <span class="product-form__error-message"></span>
+        </div>
+        {%- form 'product', current_product, id: form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input type="hidden" name="id" value="{{ current_product.selected_or_first_available_variant.id }}" class="product-variant-id">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" name="add" class="audio-button audio-button--dark audio-button--full" {% unless current_product.available %}disabled{% endunless %}>
+            <span>{% if current_product.available %}加入购物车{% else %}已售罄{% endif %}</span>
+            {%- render 'loading-spinner' -%}
+          </button>
+        {%- endform -%}
+      </product-form>
+    {%- endif -%}
+  </div>
+</article>
