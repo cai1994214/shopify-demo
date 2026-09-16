@@ -5,14 +5,15 @@
   assign rating_count = current_product.metafields.reviews.rating_count | default: 320
   assign tagline = current_product.metafields.custom.short_tagline | default: current_product.vendor | default: '纯净音质，静享世界'
   assign form_id = 'audio-card-form-' | append: section_id | append: '-' | append: current_product.id
+  assign product_image = current_product.featured_media | default: current_product.featured_image
 -%}
 
-<article class="audio-product-card" data-audio-card>
-  <a class="audio-product-card__media" href="{{ current_product.url }}">
+<article class="audio-product-card audio-reveal audio-tilt" data-audio-card>
+  <a class="audio-product-card__media audio-hover-scene" data-audio-hover-scene href="{{ current_product.url }}">
     <span class="audio-badge">{{ card_label }}</span>
-    {%- if current_product.featured_media -%}
+    {%- if product_image -%}
       {{
-        current_product.featured_media
+        product_image
         | image_url: width: 720
         | image_tag:
           loading: 'lazy',
@@ -21,7 +22,7 @@
           alt: current_product.title
       }}
     {%- else -%}
-      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
     {%- endif -%}
   </a>
   <div class="audio-product-card__body">

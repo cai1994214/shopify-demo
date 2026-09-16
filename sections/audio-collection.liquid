@@ -7,11 +7,11 @@
   <section class="audio-collection-hero">
     <div class="audio-container">
       <div class="audio-collection-hero__content">
-        <div class="audio-breadcrumb">
-          <a href="{{ routes.root_url }}">首页</a>
-          <span>›</span>
-          <span>{{ collection.title | escape }}</span>
-        </div>
+        <nav class="audio-breadcrumb" aria-label="面包屑">
+          <a class="audio-breadcrumb__link" href="{{ routes.root_url }}">首页</a>
+          <span class="audio-breadcrumb__separator" aria-hidden="true">/</span>
+          <span class="audio-breadcrumb__current" aria-current="page">{{ collection.title | escape }}</span>
+        </nav>
         <h1 class="audio-title">{{ collection.title | default: '无线耳机' }}</h1>
         <p class="audio-subtitle">
           {%- if collection.description != blank -%}

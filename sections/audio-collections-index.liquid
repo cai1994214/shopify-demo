@@ -1,0 +1,65 @@
+<div class="audio-shell">
+  <section class="audio-collection-hero">
+    <div class="audio-container">
+      <div class="audio-collection-hero__content">
+        <p class="audio-eyebrow">Sound A Better You</p>
+        <h1 class="audio-title">产品系列</h1>
+        <p class="audio-subtitle">为不同的生活场景，找到属于你的声音。</p>
+        <a class="audio-button audio-button--primary" href="{{ routes.all_products_collection_url }}">查看全部商品 →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="audio-section">
+    <div class="audio-container">
+      <div class="audio-section__head">
+        <div>
+          <h2 class="audio-title" style="font-size: 30px;">探索我们的产品系列</h2>
+          <p class="audio-subtitle">从真无线耳机到沉浸式头戴耳机，选择适合你的聆听方式。</p>
+        </div>
+        <a class="audio-link" href="{{ routes.all_products_collection_url }}">查看全部产品 →</a>
+      </div>
+      <div class="audio-category-grid">
+        {%- assign collection_count = 0 -%}
+        {%- for collection in collections -%}
+          {%- unless collection.handle == 'all' -%}
+            {%- liquid
+              assign collection_count = collection_count | plus: 1
+            -%}
+            <a class="audio-category-card" href="{{ collection.url }}">
+              <div>
+                <h3>{{ collection.title | escape }}</h3>
+                <p>{{ collection.description | strip_html | truncate: 42 | default: '为热爱而声，找到适合你的产品。' }}</p>
+                <span class="audio-category-card__arrow">→</span>
+              </div>
+              {%- if collection.featured_image -%}
+                {{ collection.featured_image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: collection.title }}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+          {%- endunless -%}
+        {%- endfor -%}
+        {%- if collection_count == 0 -%}
+          {%- for i in (1..4) -%}
+            <a class="audio-category-card" href="{{ routes.all_products_collection_url }}">
+              <div>
+                <h3>{% case forloop.index %}{% when 1 %}真无线耳机{% when 2 %}降噪耳机{% when 3 %}运动耳机{% else %}便携音箱{% endcase %}</h3>
+                <p>自由聆听，无线可能</p>
+                <span class="audio-category-card__arrow">→</span>
+              </div>
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "声迹产品系列",
+  "settings": []
+}
+{% endschema %}

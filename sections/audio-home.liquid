@@ -9,9 +9,9 @@
 -%}
 
 <div class="audio-shell">
-  <section class="audio-hero">
+  <section class="audio-hero audio-hover-scene" data-audio-parallax data-audio-hover-scene>
     <div class="audio-container">
-      <div class="audio-hero__content">
+      <div class="audio-hero__content audio-reveal audio-reveal--hero">
         <p class="audio-eyebrow">{{ section.settings.eyebrow }}</p>
         <h1 class="audio-title">{{ section.settings.heading }}</h1>
         <p class="audio-subtitle">{{ section.settings.subheading }}</p>
@@ -20,24 +20,27 @@
           <button class="audio-button" type="button" data-audio-scroll="#audio-products-{{ section.id }}">了解更多</button>
         </div>
       </div>
-      <div class="audio-handwrite">好的声音<br>让生活更美好</div>
+      <div class="audio-handwrite audio-reveal audio-reveal--handwrite">好的声音<br>让生活更美好</div>
     </div>
   </section>
 
   <section class="audio-section">
     <div class="audio-container">
-      <div class="audio-section__head">
+      <div class="audio-section__head audio-reveal">
         <div>
           <h2 class="audio-title" style="font-size: 28px;">探索我们的产品系列</h2>
           <p class="audio-subtitle">为不同的生活场景，找到属于你的声音。</p>
         </div>
-        <a class="audio-link" href="{{ routes.collections_url }}">查看全部产品 →</a>
+        <a class="audio-link" href="{{ routes.all_products_collection_url }}">查看全部产品 →</a>
       </div>
       <div class="audio-category-grid">
         {%- for block in section.blocks -%}
           {%- if block.type == 'category' -%}
-            {%- assign category_collection = block.settings.collection -%}
-            <a class="audio-category-card" href="{{ category_collection.url | default: routes.collections_url }}" {{ block.shopify_attributes }}>
+            {%- liquid
+              assign category_collection = block.settings.collection
+              assign category_product = featured_collection.products[forloop.index0]
+            -%}
+            <a class="audio-category-card audio-reveal audio-tilt audio-hover-scene" data-audio-hover-scene href="{{ category_collection.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
               <div>
                 <h3>{{ block.settings.title }}</h3>
                 <p>{{ block.settings.text }}</p>
@@ -45,12 +48,14 @@
               </div>
               {%- if block.settings.image != blank -%}
                 {{ block.settings.image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: block.settings.title }}
+              {%- elsif category_collection.image -%}
+                {{ category_collection.image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: category_collection.title }}
               {%- elsif category_collection.featured_image -%}
                 {{ category_collection.featured_image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: category_collection.title }}
-              {%- elsif featured_collection.products[forloop.index0].featured_media -%}
-                {{ featured_collection.products[forloop.index0].featured_media | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: block.settings.title }}
+              {%- elsif category_product.featured_image -%}
+                {{ category_product.featured_image | image_url: width: 360 | image_tag: loading: 'lazy', widths: '180, 260, 360', alt: block.settings.title }}
               {%- else -%}
-                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
               {%- endif -%}
             </a>
           {%- endif -%}
@@ -61,12 +66,12 @@
 
   <section class="audio-section" id="audio-products-{{ section.id }}">
     <div class="audio-container">
-      <div class="audio-section__head">
+      <div class="audio-section__head audio-reveal">
         <div>
           <h2 class="audio-title" style="font-size: 28px;">人气产品推荐</h2>
           <p class="audio-subtitle">用声音，点亮你的每一天。</p>
         </div>
-        <a class="audio-link" href="{{ featured_collection.url }}">查看全部产品 →</a>
+        <a class="audio-link" href="{{ featured_collection.url | default: routes.all_products_collection_url }}">查看全部产品 →</a>
       </div>
       <div class="audio-product-grid">
         {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
@@ -77,32 +82,31 @@
           {% render 'audio-product-card', card_product: product, label: labels[label_index], section_id: section.id %}
         {%- else -%}
           {%- for i in (1..4) -%}
-            <article class="audio-product-card">
-              <div class="audio-product-card__media">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            <article class="audio-product-card audio-reveal audio-tilt">
+              <div class="audio-product-card__media">{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}</div>
               <div class="audio-product-card__body">
-                <a class="audio-product-card__title" href="#">AirBeat Pro</a>
-                <p>纯净音质，静享世界</p>
-                <div class="audio-product-card__price"><strong>¥ 699</strong></div>
-                <div class="audio-rating"><span>★★★★★</span><small>4.8 (320)</small></div>
-                <button class="audio-button audio-button--dark audio-button--full" type="button"><span>加入购物车</span></button>
+                <a class="audio-product-card__title" href="{{ routes.all_products_collection_url }}">暂无产品</a>
+                <p>请在 Shopify 后台添加并发布商品。</p>
+                <div class="audio-product-card__price"><strong>-</strong></div>
+                <button class="audio-button audio-button--dark audio-button--full" type="button" disabled><span>暂无库存</span></button>
               </div>
             </article>
           {%- endfor -%}
         {%- endfor -%}
       </div>
 
-      <div class="audio-feature-strip">
-        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'sound' %}</span><div><h3>主动降噪</h3><p>沉浸式聆听体验</p></div></div>
-        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'battery' %}</span><div><h3>40小时续航</h3><p>长久陪伴，不惧出行</p></div></div>
-        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'phone' %}</span><div><h3>高清通话</h3><p>清晰沟通，声临其境</p></div></div>
-        <div class="audio-feature"><span class="audio-feature__icon">{% render 'audio-icon', icon: 'truck' %}</span><div><h3>极速配送</h3><p>全国包邮，快速送达</p></div></div>
+      <div class="audio-feature-strip audio-reveal">
+        <div class="audio-feature" data-audio-reveal><span class="audio-feature__icon">{% render 'audio-icon', icon: 'sound' %}</span><div><h3>主动降噪</h3><p>沉浸式聆听体验</p></div></div>
+        <div class="audio-feature" data-audio-reveal><span class="audio-feature__icon">{% render 'audio-icon', icon: 'battery' %}</span><div><h3>40小时续航</h3><p>长久陪伴，不惧出行</p></div></div>
+        <div class="audio-feature" data-audio-reveal><span class="audio-feature__icon">{% render 'audio-icon', icon: 'phone' %}</span><div><h3>高清通话</h3><p>清晰沟通，声临其境</p></div></div>
+        <div class="audio-feature" data-audio-reveal><span class="audio-feature__icon">{% render 'audio-icon', icon: 'truck' %}</span><div><h3>极速配送</h3><p>全国包邮，快速送达</p></div></div>
       </div>
     </div>
   </section>
 
-  <section class="audio-lifestyle">
+  <section class="audio-lifestyle" data-audio-parallax>
     <div class="audio-container">
-      <div class="audio-lifestyle__content">
+      <div class="audio-lifestyle__content audio-reveal">
         <p class="audio-eyebrow">Music For A Brighter Day</p>
         <h2 class="audio-title" style="font-size: 34px;">让好声音，成为生活的背景音</h2>
         <p class="audio-subtitle">无论是专注、运动，还是放松时刻，声迹音频始终与你相伴。</p>
@@ -113,16 +117,16 @@
 
   <section class="audio-section audio-reviews">
     <div class="audio-container">
-      <div class="audio-section__head">
+      <div class="audio-section__head audio-reveal">
         <div>
           <h2 class="audio-title" style="font-size: 26px;">来自用户的真实声音</h2>
           <p class="audio-subtitle">数以万计的用户选择声迹音频。</p>
         </div>
       </div>
       <div class="audio-review-grid">
-        <article class="audio-review"><div class="audio-review__head"><span class="audio-avatar">林</span><div><h3>林小雨</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“音质非常出色，降噪效果超乎预期！戴上它，整个世界都安静了。”</p></article>
-        <article class="audio-review"><div class="audio-review__head"><span class="audio-avatar">陈</span><div><h3>陈先生</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“佩戴舒适，续航很给力，出差旅行必备。声迹音频确实值得信赖！”</p></article>
-        <article class="audio-review"><div class="audio-review__head"><span class="audio-avatar">王</span><div><h3>小王同学</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“运动时戴着非常稳固，音质也很棒，已经推荐给身边的朋友了！”</p></article>
+        <article class="audio-review audio-reveal audio-tilt"><div class="audio-review__head"><span class="audio-avatar">林</span><div><h3>林小雨</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“音质非常出色，降噪效果超乎预期！戴上它，整个世界都安静了。”</p></article>
+        <article class="audio-review audio-reveal audio-tilt"><div class="audio-review__head"><span class="audio-avatar">陈</span><div><h3>陈先生</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“佩戴舒适，续航很给力，出差旅行必备。声迹音频确实值得信赖！”</p></article>
+        <article class="audio-review audio-reveal audio-tilt"><div class="audio-review__head"><span class="audio-avatar">王</span><div><h3>小王同学</h3><div class="audio-rating"><span>★★★★★</span></div></div></div><p>“运动时戴着非常稳固，音质也很棒，已经推荐给身边的朋友了！”</p></article>
       </div>
       {% render 'audio-newsletter' %}
     </div>
